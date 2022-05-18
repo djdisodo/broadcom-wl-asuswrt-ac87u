@@ -2,7 +2,7 @@
 #include <linux_osl.h>
 
 int32
-osdl_ctfpool_init(osl_t *osh, uint numobj, uint size)
+osl_ctffpool_init(osl_t *osh, uint numobj, uint size)
 {
 	return 0;
 }
