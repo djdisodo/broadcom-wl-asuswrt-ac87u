@@ -137,6 +137,8 @@ wl-objs            += src/wl/sys/wl_linux.o
 wl-objs            += src/wl/sys/wl_iw.o
 wl-objs            += src/wl/sys/wl_cfg80211_hybrid.o
 
+wl-objs            += src/compat/compat.o
+
 wl-objs            += src/shared/bcmutils.o
 wl-objs            += src/shared/siutils.o
 wl-objs            += src/shared/sbutils.o
@@ -148,7 +150,7 @@ wl-objs            += src/shared/bcmsrom.o
 EXTRA_CFLAGS       += -I$(src)/src/include -I$(src)/src/common/include
 EXTRA_CFLAGS       += -I$(src)/src/wl/sys -I$(src)/src/wl/phy -I$(src)/src/wl/ppr/include
 EXTRA_CFLAGS       += -I$(src)/src/shared/bcmwifi/include
-EXTRA_CFLAGS       += -DBCMDRIVER
+EXTRA_CFLAGS       += -DBCMDRIVER -DWLC_LOW -DCTFPOOL
 
 #idk wtf
 EXTRA_CFLAGS       += -DCONFIG_MMC_MSM7X00A
