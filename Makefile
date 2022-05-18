@@ -145,21 +145,22 @@ ifeq "$(GE_49)" "1"
 EXTRA_CFLAGS       += -Wno-date-time
 endif
 
-EXTRA_LDFLAGS      := $(src)/lib/wlc_hybrid.o_shipped
+EXTRA_LDFLAGS      := $(src)/lib/wl_preprocessed.o
 
 KBASE              ?= /lib/modules/`uname -r`
 KBUILD_DIR         ?= $(KBASE)/build
 MDEST_DIR          ?= $(KBASE)/kernel/drivers/net/wireless
 
 # Cross compile setup.  Tool chain and kernel tree, replace with your own.
-CROSS_TOOLS        = /path/to/tools
-CROSS_KBUILD_DIR   = /path/to/kernel/tree
+CROSS_TOOLS        = /home/sodo/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-
+CROSS_KBUILD_DIR   = /home/sodo/openwrt/build_dir/target-arm_cortex-a9_musl_eabi/linux-bcm53xx_generic/linux-5.10.113
 
 all:
 	KBUILD_NOPEDANTIC=1 make -C $(KBUILD_DIR) M=`pwd`
 
 cross:
-	KBUILD_NOPEDANTIC=1 make CROSS_COMPILE=${CROSS_TOOLS} -C $(CROSS_KBUILD_DIR) M=`pwd`
+	
+	KBUILD_NOPEDANTIC=1 ARCH=arm make CROSS_COMPILE=${CROSS_TOOLS} -C $(CROSS_KBUILD_DIR) M=`pwd`
 
 clean:
 	KBUILD_NOPEDANTIC=1 make -C $(KBUILD_DIR) M=`pwd` clean

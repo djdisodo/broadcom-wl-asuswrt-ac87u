@@ -16,3 +16,5 @@ src/wl/sys/wl_linux.o
 .tmp_versions/
 Module.symvers
 modules.order
+
+*.o
