@@ -212,7 +212,7 @@ typedef unsigned __int64 uint64;
 #include <stdarg.h>
 #endif
 
-#include <sys/types.h>
+//#include <sys/types.h>
 
 #endif /* linux && __KERNEL__ */
 

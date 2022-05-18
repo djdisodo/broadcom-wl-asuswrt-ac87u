@@ -1058,9 +1058,11 @@ do { \
 	#define ASSERT(exp)	do {} while (0)
 
 /* MALLOC and MFREE */
+/*
 #define MALLOC(o, l) malloc(l)
 #define MFREE(o, p, l) free(p)
 #include <stdlib.h>
+*/
 
 /* str* and mem* functions */
 #include <string.h>

@@ -119,14 +119,6 @@ typedef struct wlc_tunables {
 	int ampdunummpdu1stream;	
 } wlc_tunables_t;
 
-typedef struct wlc_rateset {
-	uint	count;			
-	uint8	rates[WLC_NUMRATES];	
-	uint8	htphy_membership;	
-	uint8	mcs[MCSSET_LEN];	
-	uint16  vht_mcsmap;		
-} wlc_rateset_t;
-
 typedef void *wlc_pkt_t;
 
 typedef struct wlc_event {
