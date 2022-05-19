@@ -18,6 +18,8 @@
 #
 # $Id: Makefile_kbuild_portsrc 580354 2015-08-18 23:42:37Z $
 
+src += /../
+
 ifneq ($(KERNELRELEASE),)
 
   LINUXVER_GOODFOR_CFG80211:=$(strip $(shell \
@@ -134,29 +136,29 @@ obj-m              += emf.o
 emf-objs            := src/emf/emf/emf_linux.o
 emf-objs            += src/shared/linux_osl.o
 
-emf-objs            += src/compat/compat.o
-emf-objs            += src/compat/bitops.o
-emf-objs            += src/compat/workqueue.o
-emf-objs            += src/compat/device.o
-emf-objs            += src/compat/skbuff.o
-emf-objs            += src/compat/proc_fs.o
-emf-objs            += src/compat/uaccess.o
-emf-objs            += src/compat/netdevice.o
+#emf-objs            += src/compat/compat.o
+#emf-objs            += src/compat/bitops.o
+#emf-objs            += src/compat/workqueue.o
+#emf-objs            += src/compat/device.o
+#emf-objs            += src/compat/skbuff.o
+#emf-objs            += src/compat/proc_fs.o
+#emf-objs            += src/compat/uaccess.o
+#emf-objs            += src/compat/netdevice.o
 
-emf-objs            += src/shared/bcmutils.o
-emf-objs            += src/shared/siutils.o
-emf-objs            += src/shared/sbutils.o
-emf-objs            += src/shared/hndpmu.o
-emf-objs            += src/shared/hnddma.o
-emf-objs            += src/shared/nicpci.o
-emf-objs            += src/shared/aiutils.o
-emf-objs            += src/shared/bcmsrom.o
-emf-objs            += src/shared/nvram_ro.o
-emf-objs            += src/shared/bcmotp.o
+#emf-objs            += src/shared/bcmutils.o
+#emf-objs            += src/shared/siutils.o
+#emf-objs            += src/shared/sbutils.o
+#emf-objs            += src/shared/hndpmu.o
+#emf-objs            += src/shared/hnddma.o
+#emf-objs            += src/shared/nicpci.o
+#emf-objs            += src/shared/aiutils.o
+#emf-objs            += src/shared/bcmsrom.o
+#emf-objs            += src/shared/nvram_ro.o
+#emf-objs            += src/shared/bcmotp.o
 
 EXTRA_CFLAGS       += -I$(src)/src/include -I$(src)/src/common/include
 EXTRA_CFLAGS       += -I$(src)/src/wl/sys -I$(src)/src/wl/phy -I$(src)/src/wl/ppr/include
-EXTRA_CFLAGS       += -I$(src)/src/shared/bcmwifi/include -I$(src)/src/emf
+EXTRA_CFLAGS       += -I$(src)/src/shared/bcmwifi/include
 EXTRA_CFLAGS       += -DBCMDRIVER -DWLC_LOW -nostdlib -DWLMSG_PRPKT -DCTFPOOL -DHNDCTF
 
 #idk wtf

@@ -24,7 +24,7 @@
 #include <bcmnvram.h>
 #include <bcmutils.h>
 #include <osl.h>
-#include <osl_linux.h>
+#include <emf/igs/osl_linux.h>
 #include <emf/emf/emf_cfg.h>
 #include <emf/emf/emfc_export.h>
 #include "emf_linux.h"
