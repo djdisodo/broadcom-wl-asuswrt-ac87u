@@ -492,7 +492,7 @@ wl_if_setup(struct net_device *dev)
 #endif
 }
 
-static wl_info_t *
+wl_info_t *
 wl_attach(uint16 vendor, uint16 device, ulong regs,
 	uint bustype, void *btparam, uint irq, uchar* bar1_addr, uint32 bar1_size)
 {

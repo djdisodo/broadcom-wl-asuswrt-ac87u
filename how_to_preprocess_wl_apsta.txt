@@ -31,3 +31,13 @@
 -W wl_set_pktlen \
 -W wl_get_pktbuffer \
 -W wl_buf_to_pktcopy
+
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym schedule_work_on=compat_schedule_work_on lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym dev_set_drvdata=compat_dev_set_drvdata lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym dev_get_drvdata=compat_dev_get_drvdata lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym dev_alloc_skb=compat_dev_alloc_skb lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym flush_scheduled_work=compat_flush_scheduled_work lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym schedule_work=compat_schedule_work lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym __copy_to_user=compat__copy_to_user lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym __copy_from_user=compat__copy_from_user lib/wl_preprocessed.o
+~/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-objcopy --redefine-sym alloc_netdev_mq=compat_alloc_netdev_mq lib/wl_preprocessed.o

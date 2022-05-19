@@ -138,19 +138,29 @@ wl-objs            += src/wl/sys/wl_iw.o
 wl-objs            += src/wl/sys/wl_cfg80211_hybrid.o
 
 wl-objs            += src/compat/compat.o
+wl-objs            += src/compat/bitops.o
+wl-objs            += src/compat/workqueue.o
+wl-objs            += src/compat/device.o
+wl-objs            += src/compat/skbuff.o
+wl-objs            += src/compat/proc_fs.o
+wl-objs            += src/compat/uaccess.o
+wl-objs            += src/compat/netdevice.o
 
 wl-objs            += src/shared/bcmutils.o
 wl-objs            += src/shared/siutils.o
 wl-objs            += src/shared/sbutils.o
 wl-objs            += src/shared/hndpmu.o
+wl-objs            += src/shared/hnddma.o
 wl-objs            += src/shared/nicpci.o
 wl-objs            += src/shared/aiutils.o
 wl-objs            += src/shared/bcmsrom.o
+wl-objs            += src/shared/nvram_ro.o
+wl-objs            += src/shared/bcmotp.o
 
 EXTRA_CFLAGS       += -I$(src)/src/include -I$(src)/src/common/include
 EXTRA_CFLAGS       += -I$(src)/src/wl/sys -I$(src)/src/wl/phy -I$(src)/src/wl/ppr/include
 EXTRA_CFLAGS       += -I$(src)/src/shared/bcmwifi/include
-EXTRA_CFLAGS       += -DBCMDRIVER -DWLC_LOW
+EXTRA_CFLAGS       += -DBCMDRIVER -DWLC_LOW -nostdlib -DWLMSG_PRPKT
 
 #idk wtf
 EXTRA_CFLAGS       += -DCONFIG_MMC_MSM7X00A
