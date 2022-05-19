@@ -27,6 +27,7 @@
 #include <osl.h>
 #include <bcmutils.h>
 #include <linux/delay.h>
+#include <linux/refcount.h>
 #ifdef mips
 #include <asm/paccess.h>
 #endif /* mips */
@@ -694,7 +695,11 @@ osl_pktfastget(osl_t *osh, uint len)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 14)
 	skb->list = NULL;
 #endif
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	refcount_set(&skb->users, 1);
+#else
 	atomic_set(&skb->users, 1);
+#endif
 
 	PKTSETCLINK(skb, NULL);
 	PKTCCLRATTR(skb);
@@ -821,7 +826,9 @@ osl_pktfastfree(osl_t *osh, struct sk_buff *skb)
 	unsigned long flags;
 #endif /* CTFPOOL_SPINLOCK */
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 14)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	skb->tstamp = 0; //nanosec
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 14)
 	skb->tstamp.tv.sec = 0;
 #else
 	skb->stamp.tv_sec = 0;
@@ -912,9 +919,9 @@ osl_pktfree(osl_t *osh, void *p, bool send)
 
 #ifdef CTFPOOL
 		if (PKTISFAST(osh, skb)) {
-			if (atomic_read(&skb->users) == 1)
+			if (refcount_read(&skb->users) == 1)
 				smp_rmb();
-			else if (!atomic_dec_and_test(&skb->users))
+			else if (!refcount_dec_and_test(&skb->users))
 				goto next_skb;
 			osl_pktfastfree(osh, skb);
 		} else
