@@ -1,0 +1,1 @@
+cmd_/home/sodo/broadcom-wl-asuswrt-ac87u/igs/modules.order := {   echo /home/sodo/broadcom-wl-asuswrt-ac87u/igs/igs.ko; :; } | awk '!x[$$0]++' - > /home/sodo/broadcom-wl-asuswrt-ac87u/igs/modules.order

@@ -594,7 +594,7 @@ igs_module_init(void)
 			NETLINK_IGSC,	/* unit ? */
 			&nk_cfg
 	);
-#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	igs.nl_sk = netlink_kernel_create(
 			&init_net,
 			NETLINK_IGSC, 0, igs_netlink_sock_cb,

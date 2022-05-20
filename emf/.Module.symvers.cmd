@@ -1,0 +1,1 @@
+cmd_/home/sodo/broadcom-wl-asuswrt-ac87u/emf/Module.symvers := sed 's/ko$$/o/' /home/sodo/broadcom-wl-asuswrt-ac87u/emf/modules.order | scripts/mod/modpost     -o /home/sodo/broadcom-wl-asuswrt-ac87u/emf/Module.symvers -e -i Module.symvers   -T -

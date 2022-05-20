@@ -1,5 +1,5 @@
 //these aren't used anymore; only symbols exists
-int num_physpages[0], _raw_spin_unlock[0], dnsmq_hit_hook[0], cpu_online_mask[0], dma_addrwidth[0];
+int num_physpages[0], _raw_spin_unlock[0], dnsmq_hit_hook[0], cpu_online_mask[0];
 
 
 #include <string.h>

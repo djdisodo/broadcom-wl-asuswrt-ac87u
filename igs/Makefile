@@ -18,6 +18,8 @@
 #
 # $Id: Makefile_kbuild_portsrc 580354 2015-08-18 23:42:37Z $
 
+src := $(src)/../
+
 ifneq ($(KERNELRELEASE),)
 
   LINUXVER_GOODFOR_CFG80211:=$(strip $(shell \
@@ -129,33 +131,30 @@ ifeq ($(APIFINAL),WEXT)
   $(info Using Wireless Extension API)
 endif
 
-obj-m              += wl.o
+obj-m              += igs.o
 
-wl-objs            :=
-wl-objs            += src/shared/linux_osl.o
-wl-objs            += src/wl/sys/wl_linux.o
-wl-objs            += src/wl/sys/wl_iw.o
-wl-objs            += src/wl/sys/wl_cfg80211_hybrid.o
+igs-objs            := src/emf/igs/igs_linux.o src/emf/igs/igsc.o src/emf/igs/igsc_sdb.o src/emf/igs/osl_linux.o
+igs-objs            += src/shared/linux_osl.o
 
-wl-objs            += src/compat/compat.o
-wl-objs            += src/compat/bitops.o
-wl-objs            += src/compat/workqueue.o
-wl-objs            += src/compat/device.o
-wl-objs            += src/compat/skbuff.o
-wl-objs            += src/compat/proc_fs.o
-wl-objs            += src/compat/uaccess.o
-wl-objs            += src/compat/netdevice.o
+#igs-objs            += src/compat/compat.o
+#igs-objs            += src/compat/bitops.o
+#igs-objs            += src/compat/workqueue.o
+#igs-objs            += src/compat/device.o
+#igs-objs            += src/compat/skbuff.o
+#igs-objs            += src/compat/proc_fs.o
+#igs-objs            += src/compat/uaccess.o
+#igs-objs            += src/compat/netdevice.o
 
-wl-objs            += src/shared/bcmutils.o
-wl-objs            += src/shared/siutils.o
-wl-objs            += src/shared/sbutils.o
-wl-objs            += src/shared/hndpmu.o
-wl-objs            += src/shared/hnddma.o
-wl-objs            += src/shared/nicpci.o
-wl-objs            += src/shared/aiutils.o
-wl-objs            += src/shared/bcmsrom.o
-wl-objs            += src/shared/nvram_ro.o
-wl-objs            += src/shared/bcmotp.o
+igs-objs            += src/shared/bcmutils.o
+igs-objs            += src/shared/siutils.o
+igs-objs            += src/shared/sbutils.o
+igs-objs            += src/shared/hndpmu.o
+igs-objs            += src/shared/hnddma.o
+igs-objs            += src/shared/nicpci.o
+igs-objs            += src/shared/aiutils.o
+igs-objs            += src/shared/bcmsrom.o
+igs-objs            += src/shared/nvram_ro.o
+igs-objs            += src/shared/bcmotp.o
 
 EXTRA_CFLAGS       += -I$(src)/src/include -I$(src)/src/common/include
 EXTRA_CFLAGS       += -I$(src)/src/wl/sys -I$(src)/src/wl/phy -I$(src)/src/wl/ppr/include
@@ -170,7 +169,7 @@ ifeq "$(GE_49)" "1"
 EXTRA_CFLAGS       += -Wno-date-time
 endif
 
-EXTRA_LDFLAGS      := $(src)/lib/wl_preprocessed.o
+#EXTRA_LDFLAGS      := $(src)/lib/wl_preprocessed.o
 
 KBASE              ?= /lib/modules/`uname -r`
 KBUILD_DIR         ?= $(KBASE)/build
@@ -180,7 +179,6 @@ MDEST_DIR          ?= $(KBASE)/kernel/drivers/net/wireless
 CROSS_TOOLS        = /home/sodo/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-
 CROSS_KBUILD_DIR   = /home/sodo/openwrt/build_dir/target-arm_cortex-a9_musl_eabi/linux-bcm53xx_generic/linux-5.10.113
 KBUILD_EXTRA_SYMBOLS = $(src)/emf/Module.symvers
-KBUILD_EXTRA_SYMBOLS = $(src)/igs/Module.symvers
 
 all:
 	KBUILD_NOPEDANTIC=1 make -C $(KBUILD_DIR) M=`pwd`

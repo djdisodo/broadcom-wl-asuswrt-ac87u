@@ -179,6 +179,8 @@ MDEST_DIR          ?= $(KBASE)/kernel/drivers/net/wireless
 # Cross compile setup.  Tool chain and kernel tree, replace with your own.
 CROSS_TOOLS        = /home/sodo/openwrt/staging_dir/toolchain-arm_cortex-a9_gcc-11.2.0_musl_eabi/bin/arm-openwrt-linux-
 CROSS_KBUILD_DIR   = /home/sodo/openwrt/build_dir/target-arm_cortex-a9_musl_eabi/linux-bcm53xx_generic/linux-5.10.113
+KBUILD_EXTRA_SYMBOLS := $(src)/emf/Module.symvers
+KBUILD_EXTRA_SYMBOLS += $(src)/igs/Module.symvers
 
 all:
 	KBUILD_NOPEDANTIC=1 make -C $(KBUILD_DIR) M=`pwd`

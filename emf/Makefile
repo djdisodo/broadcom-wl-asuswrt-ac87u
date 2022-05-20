@@ -133,7 +133,7 @@ endif
 
 obj-m              += emf.o
 
-emf-objs            := src/emf/emf/emf_linux.o
+emf-objs            := src/emf/emf/emf_linux.o src/emf/emf/emfc.o
 emf-objs            += src/shared/linux_osl.o
 
 #emf-objs            += src/compat/compat.o
@@ -145,16 +145,16 @@ emf-objs            += src/shared/linux_osl.o
 #emf-objs            += src/compat/uaccess.o
 #emf-objs            += src/compat/netdevice.o
 
-#emf-objs            += src/shared/bcmutils.o
-#emf-objs            += src/shared/siutils.o
-#emf-objs            += src/shared/sbutils.o
-#emf-objs            += src/shared/hndpmu.o
-#emf-objs            += src/shared/hnddma.o
-#emf-objs            += src/shared/nicpci.o
-#emf-objs            += src/shared/aiutils.o
-#emf-objs            += src/shared/bcmsrom.o
-#emf-objs            += src/shared/nvram_ro.o
-#emf-objs            += src/shared/bcmotp.o
+emf-objs            += src/shared/bcmutils.o
+emf-objs            += src/shared/siutils.o
+emf-objs            += src/shared/sbutils.o
+emf-objs            += src/shared/hndpmu.o
+emf-objs            += src/shared/hnddma.o
+emf-objs            += src/shared/nicpci.o
+emf-objs            += src/shared/aiutils.o
+emf-objs            += src/shared/bcmsrom.o
+emf-objs            += src/shared/nvram_ro.o
+emf-objs            += src/shared/bcmotp.o
 
 EXTRA_CFLAGS       += -I$(src)/src/include -I$(src)/src/common/include
 EXTRA_CFLAGS       += -I$(src)/src/wl/sys -I$(src)/src/wl/phy -I$(src)/src/wl/ppr/include

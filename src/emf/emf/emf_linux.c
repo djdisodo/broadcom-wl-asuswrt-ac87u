@@ -27,7 +27,7 @@
 #include <emf/igs/osl_linux.h>
 #include <emf/emf/emf_cfg.h>
 #include <emf/emf/emfc_export.h>
-#include "emf_linux.h"
+#include <emf/emf/emf_linux.h>
 
 MODULE_LICENSE("Proprietary");
 
@@ -101,16 +101,24 @@ emf_instance_find_by_brptr(emf_struct_t *emf, struct net_device *br_ptr)
  */
 static uint32
 emf_br_pre_hook(
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	void *hook,
+#else
 	uint32 hook,
+#endif
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	struct sk_buff *skb,
 #else
 	struct sk_buff **pskb,
 #endif
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	const struct nf_hook_state *state
+#else
 	const struct net_device *in,
 	const struct net_device *out,
-	int32 (*okfn)(struct sk_buff *))
-{
+	int32 (*okfn)(struct sk_buff *)
+#endif
+) {
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	struct sk_buff **pskb = &skb;
 #endif
@@ -155,16 +163,24 @@ emf_br_pre_hook(
  */
 static uint32
 emf_ip_post_hook(
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	void *hook,
+#else
 	uint32 hook,
+#endif
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	struct sk_buff *skb,
 #else
 	struct sk_buff **pskb,
 #endif
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	const struct nf_hook_state *state
+#else
 	const struct net_device *in,
 	const struct net_device *out,
-	int32 (*okfn)(struct sk_buff *))
-{
+	int32 (*okfn)(struct sk_buff *)
+#endif
+) {
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	struct sk_buff **pskb = &skb;
 #endif
@@ -538,13 +554,21 @@ emf_hooks_register(emf_info_t *emfi)
 	 */
 	for (i = 0; i < sizeof(emf_nf_ops)/sizeof(struct nf_hook_ops); i++)
 	{
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,13,0)
+		ret = nf_register_net_hook(&init_net, &emf_nf_ops[i]);
+#else
 		ret = nf_register_hook(&emf_nf_ops[i]);
+#endif
 
 		if (ret < 0)
 		{
 			EMF_ERROR("Unable to register netfilter hooks\n");
 			for (j = 0; j < i; j++)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,13,0)
+				nf_unregister_net_hook(&init_net, &emf_nf_ops[j]);
+#else
 				nf_unregister_hook(&emf_nf_ops[j]);
+#endif
 			return (FAILURE);
 		}
 	}
@@ -570,7 +594,11 @@ emf_hooks_unregister(emf_info_t *emfi)
 	/* Unregister all the hooks */
 	for (i = 0; i < sizeof(emf_nf_ops)/sizeof(struct nf_hook_ops); i++)
 	{
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,13,0)
+		nf_unregister_net_hook(&init_net, &emf_nf_ops[i]);
+#else
 		nf_unregister_hook(&emf_nf_ops[i]);
+#endif
 	}
 
 	return;
@@ -648,10 +676,17 @@ emf_instance_add(emf_struct_t *emf, int8 *inst_id, struct net_device *br_ptr)
 	emfi->iflist_head = NULL;
 
 #ifdef CONFIG_PROC_FS
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0) //TODO
+	sprintf(proc_name, "emf/emf_stats_%s", inst_id);
+	//proc_create_seq_data(proc_name, 0, 0, emf_stats_get, emfi);
+	sprintf(proc_name, "emf/emfdb_%s", inst_id);
+	//proc_create_seq_data(proc_name, 0, 0, emf_mfdb_list, emfi);
+#else
 	sprintf(proc_name, "emf/emf_stats_%s", inst_id);
 	create_proc_read_entry(proc_name, 0, 0, emf_stats_get, emfi);
 	sprintf(proc_name, "emf/emfdb_%s", inst_id);
 	create_proc_read_entry(proc_name, 0, 0, emf_mfdb_list, emfi);
+#endif
 #endif /* CONFIG_PROC_FS */
 
 	/* Add to the global EMF instance list */
@@ -1035,6 +1070,9 @@ emf_netlink_sock_cb(
 
 		/* Send the result to user process */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0)
+		NETLINK_CB(skb).portid = nlh->nlmsg_pid;
+		NETLINK_CB(skb).dst_group = 0;
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0)
 		NETLINK_CB(skb).pid = nlh->nlmsg_pid;
 		NETLINK_CB(skb).dst_group = 0;
 #else
@@ -1080,6 +1118,17 @@ emf_instances_clear(emf_struct_t *emf)
 static int32 __init
 emf_module_init(void)
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	struct netlink_kernel_cfg nk_cfg = {
+		.groups = 0,
+		.flags = 0,
+		.input = emf_netlink_sock_cb,
+		.cb_mutex = NULL,
+		.bind = NULL,
+		.unbind = NULL,
+		.compare = NULL
+	};
+#endif
 	EMF_DEBUG("Loading EMF\n");
 
 	/* Allocate EMF global data object */
@@ -1106,7 +1155,13 @@ emf_module_init(void)
 
 	/* Create a Netlink socket in kernel-space */
 #define NETLINK_EMFC 17		/* Still vacant in 2.6.36 */
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+	emf->nl_sk = netlink_kernel_create(
+			&init_net,	/* struct net */
+			NETLINK_EMFC,	/* unit ? */
+			&nk_cfg
+	);
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	emf->nl_sk = netlink_kernel_create(
 			&init_net,	/* struct net */
 			NETLINK_EMFC,	/* unit ? */
